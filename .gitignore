@@ -1,0 +1,15 @@
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore system and IDE files
+.DS_Store
+*.log
+
+# Ignore bookings (privacy)
+static/bookings.csv
+
