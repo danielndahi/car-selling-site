@@ -1,0 +1,55 @@
+body {
+    background-color: #121212;
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+}
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 4rem 8%;
+    flex-wrap: wrap;
+}
+
+.hero-text {
+    flex: 1;
+    max-width: 500px;
+}
+
+.hero-text h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+}
+
+.hero-text a {
+    margin-top: 1.5rem;
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.hero-img {
+    flex: 1;
+    text-align: center;
+}
+
+.hero-img img {
+    max-width: 100%;
+    max-height: 400px;
+}
+
+/* Optional: Card Styling on Dark Background */
+.card {
+    background-color: #ffffff;
+    color: #000000;
+}
