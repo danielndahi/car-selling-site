@@ -1,55 +1,130 @@
+/* === COLOR VARIABLES === */
+:root {
+  --primary-orange: #ff6f00;
+  --orange-hover: #e65c00;
+  --primary-blue: #0d6efd;
+  --bg-white: #f8f9fa;
+  --text-dark: #212529;
+}
+
+/* === GLOBAL === */
 body {
-    background-color: #121212;
-    font-family: 'Poppins', sans-serif;
-    color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-white);
+  color: var(--text-dark);
+  scroll-behavior: smooth;
 }
 
-.hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1a1a1a;
-    padding: 4rem 8%;
-    flex-wrap: wrap;
+/* === NAVBAR === */
+.navbar {
+  background-color: rgba(255, 214, 103, 0.7);
+  backdrop-filter: blur(10px);
+}
+.navbar-brand {
+  color: var(--primary-orange) !important;
+}
+.navbar-nav .nav-link {
+  color: #fff !important;
+}
+.navbar-nav .nav-link:hover {
+  color: var(--primary-orange) !important;
 }
 
-.hero-text {
-    flex: 1;
-    max-width: 500px;
+/* === BUTTONS === */
+.btn-primary {
+  background-color: var(--primary-orange);
+  border: none;
+}
+.btn-primary:hover {
+  background-color: var(--orange-hover);
+}
+.btn-outline-warning {
+  border: 2px solid var(--primary-orange);
+  color: var(--primary-orange);
+}
+.btn-outline-warning:hover {
+  background-color: var(--primary-orange);
+  color: #fff;
 }
 
-.hero-text h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+/* === HERO SECTION === */
+.hero-dark {
+  position: relative;
+  color: white;
+}
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+}
+.float-animate {
+  animation: floatCar 4s ease-in-out infinite;
+}
+@keyframes floatCar {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
-.hero-text p {
-    font-size: 1.2rem;
+/* === FILTER SECTION === */
+.filters input,
+.filters select {
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin-right: 10px;
+  outline: none;
+  transition: 0.3s ease;
+}
+.filters input:focus,
+.filters select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
 }
 
-.hero-text a {
-    margin-top: 1.5rem;
-    display: inline-block;
-    padding: 0.8rem 2rem;
-    background: #ffffff;
-    color: #000000;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-.hero-img {
-    flex: 1;
-    text-align: center;
-}
-
-.hero-img img {
-    max-width: 100%;
-    max-height: 400px;
-}
-
-/* Optional: Card Styling on Dark Background */
+/* === CAR CARD === */
 .card {
-    background-color: #ffffff;
-    color: #000000;
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover-enhanced:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 0 25px rgba(13, 110, 253, 0.4);
+  border-color: #0a58ca !important;
+}
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+/* === TAGS === */
+.tag {
+  background: var(--primary-orange);
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  margin-right: 6px;
+}
+
+/* === WAVES === */
+.wave {
+  display: block;
+  width: 100%;
+  margin-top: -2px;
+}
+
+/* === ALERTS === */
+.alert-area .alert {
+  border-radius: 12px;
+}
+
+/* === FOOTER === */
+footer {
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+}
+footer .text-warning {
+  color: var(--primary-orange) !important;
 }

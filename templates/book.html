@@ -1,118 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Book {{ car.name }} | AutoSphere</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "base.html" %}
 
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+{% block title %}Book {{ car.name }} | AutoSphere{% endblock %}
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-
-<!-- AOS Animation -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-<style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: #f8f9fa;
-  }
-  .hero-section {
-    background: linear-gradient(135deg, #0d6efd, #6610f2), url("/static/images/hero-bg.jpg") center/cover no-repeat;
-    padding: 4rem 0;
-    color: #fff;
-    text-align: center;
-    border-radius: 0 0 30px 30px;
-  }
-  .hero-section h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-  }
-  .car-info img {
-    width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  }
-  .car-info p {
-    font-size: 1rem;
-    color: #333;
-  }
-  .form-container {
-    background: #fff;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  }
-  .btn-success {
-    background: #0d6efd;
-    border: none;
-    padding: 0.75rem;
-    font-size: 1.1rem;
-    border-radius: 50px;
-  }
-  .btn-success:hover {
-    background: #084298;
-  }
-  .back-link {
-    display: block;
-    margin-top: 1.5rem;
-    text-align: center;
-    color: #0d6efd;
-    text-decoration: none;
-  }
-  .back-link:hover {
-    text-decoration: underline;
-  }
-</style>
-</head>
-<body>
-
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a href="{{ url_for('home') }}" class="navbar-brand fw-bold">AutoSphere</a>
-  </div>
-</nav>
-
+{% block content %}
 <!-- HERO SECTION -->
-<section class="hero-section" data-aos="fade-down">
-  <h2>Book {{ car.name }}</h2>
-  <p>Your dream car is just one booking away.</p>
+<section class="hero-section text-center text-white py-5" data-aos="fade-down" style="background: linear-gradient(135deg, #0d6efd, #6610f2); border-radius: 0 0 30px 30px;">
+  <div class="container">
+    <h2>Book {{ car.name }}</h2>
+    <p>Your dream car is just one booking away.</p>
+  </div>
 </section>
 
-<!-- CONTENT -->
+<!-- MAIN CONTENT -->
 <div class="container py-5">
-  <div class="row g-5 align-items-start">
+  <div class="row g-5">
     <!-- Car Info -->
-    <div class="col-md-6 car-info" data-aos="fade-right">
-      <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.name }}">
+    <div class="col-md-6" data-aos="fade-right">
+      <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.name }}" class="img-fluid rounded shadow-sm">
       <p class="mt-3">{{ car.description }}</p>
       <p><strong>Price:</strong> {{ car.price }}</p>
-      <p><strong>Type:</strong> {{ car.type }} | <strong>Fuel:</strong> {{ car.fuel }} | <strong>Transmission:</strong> {{ car.transmission }}</p>
+      <p><strong>Type:</strong> {{ car.category }} | <strong>Fuel:</strong> {{ car.fuel }} | <strong>Transmission:</strong> {{ car.transmission }}</p>
     </div>
 
     <!-- Booking Form -->
     <div class="col-md-6" data-aos="fade-left">
-      <div class="form-container">
-        <h4 class="text-center mb-4">Your Details</h4>
+      <div class="form-container p-4 bg-white rounded shadow-sm">
+        <h4 class="text-center mb-4">Your Booking Details</h4>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
         <form action="{{ url_for('submit') }}" method="POST" class="needs-validation" novalidate>
           <input type="hidden" name="car" value="{{ car.name }}">
 
           <div class="mb-3">
             <label for="name" class="form-label">Your Name</label>
-            <input type="text" class="form-control" name="name" required>
+            <input type="text" class="form-control" name="name" placeholder="e.g. John Doe" required>
           </div>
 
           <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" required>
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" name="email" placeholder="e.g. johndoe@example.com" required>
           </div>
 
           <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>
-            <input type="text" class="form-control" name="phone" required>
+            <input type="text" class="form-control" name="phone" placeholder="e.g. +254712345678" required>
           </div>
 
           <div class="mb-3">
@@ -126,28 +68,18 @@
           </div>
 
           <div class="mb-4">
-            <label for="date" class="form-label">Booking Date</label>
+            <label for="date" class="form-label">Preferred Booking Date</label>
             <input type="date" class="form-control" name="date" required>
           </div>
 
-          <button type="submit" class="btn btn-success w-100">Submit Booking</button>
+          <button type="submit" class="btn btn-primary w-100">Submit Booking</button>
         </form>
-        <a href="{{ url_for('home') }}" class="back-link">&larr; Back to Listings</a>
+
+        <div class="text-center mt-4">
+          <a href="{{ url_for('home') }}" class="text-decoration-none text-primary">&larr; Back to Car Listings</a>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<!-- FOOTER -->
-<footer class="bg-dark text-center text-white py-3 mt-5">
-  © 2025 AutoSphere
-</footer>
-
-<!-- JS & AOS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-  AOS.init();
-</script>
-</body>
-</html>
+{% endblock %}

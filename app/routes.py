@@ -1,27 +1,9 @@
-from flask import Flask, render_template, request, redirect, flash, url_for
-from flask_sqlalchemy import SQLAlchemy
-import os
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from .models import db, Booking
 
-app = Flask(__name__)
-app.secret_key = 'something_secret_and_random'  # Needed for flash messages
+main = Blueprint('main', __name__)
 
-# 🚀 Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bookings.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
-# 📦 Database Model
-class Booking(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
-    phone = db.Column(db.String(20), nullable=False)
-    payment = db.Column(db.String(20), nullable=False)
-    date = db.Column(db.String(20), nullable=False)
-    car = db.Column(db.String(100), nullable=False)
-
-# 🚗 Car list (add your cars here)
+# Static car list (you can later move this to a database or JSON)
 cars = [
     {
         "name": "BMW 3 Series",
@@ -125,13 +107,8 @@ cars = [
     }
 ]
 
-# Debug helper to list all expected image names
-for car in cars:
-    print(car["image"])
-
-
-
-@app.route("/")
+# Home
+@main.route("/")
 def home():
     query = request.args.get('search', '').lower()
     selected_category = request.args.get('category')
@@ -157,20 +134,14 @@ def home():
         query=query
     )
 
-@app.route("/car/<slug>")
-def car_detail(slug):
-    car = next((c for c in cars if c.get('slug') == slug), None)
-    if not car:
-        return "Car not found", 404
-    return render_template('car_detail.html', car=car)
-
-@app.route("/book/<car_name>")
+# Booking
+@main.route("/book/<car_name>")
 def book(car_name):
     car_data = next((car for car in cars if car['name'] == car_name), None)
     car_image = car_data['image'] if car_data else "placeholder.jpg"
     return render_template("book.html", car=car_data, car_image=car_image)
 
-@app.route("/submit", methods=["POST"])
+@main.route("/submit", methods=["POST"])
 def submit():
     name = request.form.get("name")
     email = request.form.get("email")
@@ -181,12 +152,12 @@ def submit():
 
     if not all([name, email, phone, payment, date, car]):
         flash("Please fill in all fields.", "danger")
-        return redirect(url_for("book", car_name=car))
+        return redirect(url_for("main.book", car_name=car))
 
     existing = Booking.query.filter_by(car=car, date=date).first()
     if existing:
         flash("Sorry, this car is already booked on that date.", "danger")
-        return redirect(url_for("book", car_name=car))
+        return redirect(url_for("main.book", car_name=car))
 
     new_booking = Booking(
         name=name,
@@ -200,28 +171,26 @@ def submit():
     db.session.commit()
 
     flash("Booking submitted successfully!", "success")
-    return redirect(url_for("thank_you", name=name, car=car))
+    return redirect(url_for("main.thank_you", name=name, car=car))
 
-@app.route("/thankyou")
+# Thank you
+@main.route("/thankyou")
 def thank_you():
     name = request.args.get("name")
     car = request.args.get("car")
     return render_template("thankyou.html", name=name, car=car)
 
-@app.route("/bookings")
+# Booking list
+@main.route("/bookings")
 def view_bookings():
     bookings = Booking.query.all()
     return render_template("bookings.html", bookings=bookings)
 
-@app.route("/delete/<int:booking_id>")
+# Delete booking
+@main.route("/delete/<int:booking_id>")
 def delete_booking(booking_id):
     booking = Booking.query.get_or_404(booking_id)
     db.session.delete(booking)
     db.session.commit()
     flash("Booking deleted successfully.", "success")
-    return redirect(url_for("view_bookings"))
-
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True, port=5050)
+    return redirect(url_for("main.view_bookings"))
